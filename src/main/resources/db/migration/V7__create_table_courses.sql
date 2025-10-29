@@ -1,4 +1,4 @@
-CREATE TABLE `course` (
+CREATE TABLE `courses` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `year` INT NOT NULL COMMENT '개설 연도',
     `semester` INT NOT NULL COMMENT '개설 학기 (1:봄, 2:여름, 3:가을, 4:겨울)',
@@ -12,5 +12,5 @@ CREATE TABLE `course` (
     `course_title` VARCHAR(255) NOT NULL COMMENT '교과목명',
     `credits` INT NOT NULL COMMENT '학점 수',
     `professor` VARCHAR(255) COMMENT '담당교수',
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );

@@ -2,16 +2,26 @@
 
 ## TimetableDTO
 
-- same as table `timetable`
+- same as table `timetables`
 
 ## ClassTimeDTO
 
-- same as table `class_time`
+- same as table `class_times`
 
 ## CourseDTO
 
-- includes all columns of table `course`
+- includes all columns of table `courses`
 - includes additional property: `classTimes: List<ClassTimeDTO>`
+
+## TimetableDetailsDTO
+
+```kotlin
+data class TimetableDetailsDTO(
+    val timetable: TimetableDTO,
+    val courses: List<CourseDTO>,
+    val credits: Int
+)
+```
 
 # 시간표 관리 기능(`/timetable`, 로그인 필요)
 
@@ -48,14 +58,7 @@
     - 200
     - 403: timetable with :id is not user's
     - 404: there is no timetable with :id
-- response body: 
-```json
-{
-  "timetable": "TimetableDTO",
-  "course": "List<CourseDTO>",
-  "credit": "int"
-}
-```
+- response body: `TimetableDetailsDTO`
 
 ## 시간표 수정
 
@@ -76,7 +79,7 @@
 
 ## 시간표 삭제
 
-- method & path: PATCH `/timetable/:id`
+- method & path: DELETE `/timetable/:id`
 - status code:
     - 204: the timetable is deleted
     - 403: timetable with :id is not user's
