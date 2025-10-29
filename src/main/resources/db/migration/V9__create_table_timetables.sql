@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `timetables` (
     `user_id` BIGINT NOT NULL COMMENT 'User ID',
     `name` VARCHAR(255) NOT NULL COMMENT '시간표 이름',
     `year` INT NOT NULL COMMENT '대상 연도',
-    `semester` INT NOT NULL COMMENT '대상 학기',
+    `semester` INT NOT NULL COMMENT '대상 학기' CHECK (`semester` BETWEEN 1 AND 4),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
