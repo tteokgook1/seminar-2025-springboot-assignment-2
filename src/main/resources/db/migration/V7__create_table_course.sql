@@ -1,0 +1,16 @@
+CREATE TABLE `course` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `year` INT NOT NULL COMMENT '개설 연도',
+    `semester` INT NOT NULL COMMENT '개설 학기 (1:봄, 2:여름, 3:가을, 4:겨울)',
+    `classification` VARCHAR(100) COMMENT '교과구분',
+    `college` VARCHAR(100) COMMENT '개설대학',
+    `department` VARCHAR(100) COMMENT '개설학과',
+    `program` VARCHAR(100) COMMENT '이수과정',
+    `grade` INT COMMENT '학년',
+    `course_number` VARCHAR(50) NOT NULL COMMENT '교과목번호',
+    `lecture_number` VARCHAR(50) NOT NULL COMMENT '강좌번호',
+    `course_title` VARCHAR(255) NOT NULL COMMENT '교과목명',
+    `credits` INT NOT NULL COMMENT '학점 수',
+    `professor` VARCHAR(255) COMMENT '담당교수',
+    PRIMARY KEY (`id`),
+);
