@@ -28,8 +28,6 @@ data class TimetableDetailsDTO(
 ```json5
 {
   "nextId": "int",
-  "size": "int",     // page size
-  "total": "int",    // total items
   "hasNext": "bool"
 }
 ```
