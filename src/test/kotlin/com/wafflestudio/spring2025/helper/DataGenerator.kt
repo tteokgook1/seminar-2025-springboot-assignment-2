@@ -103,7 +103,7 @@ class DataGenerator(
                     semester = semester,
                     courseNumber = cn,
                     lectureNumber = (lectureNumber ?: "lecture-${Random.nextInt(1000000)}"),
-                    credits = (credits ?: Random.nextInt(5)),
+                    credits = (credits ?: Random.nextInt(1, 6)),
                     courseTitle = cn,
                 ),
             )
@@ -139,8 +139,8 @@ class DataGenerator(
             timetableRepository.save(
                 Timetable(
                     name = name ?: "timetable-${Random.nextInt(1000000)}",
-                    year = year ?: Random.nextInt(1000000),
-                    semester = semester ?: Random.nextInt(1000000),
+                    year = year ?: Random.nextInt(2020, 2030),
+                    semester = semester ?: Random.nextInt(1, 5),
                     userId = (user ?: generateUser().first).id!!,
                 ),
             )
