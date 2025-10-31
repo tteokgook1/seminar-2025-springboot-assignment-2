@@ -23,6 +23,24 @@ data class TimetableDetailsDTO(
 )
 ```
 
+## PaginationMeta
+
+```json5
+{
+  "nextId": "int",
+  "hasNext": "bool"
+}
+```
+
+## CourseSearchResponse
+
+```json5
+{
+  "items": "List<CourseDTO>",
+  "meta": "PaginationMeta"
+}
+```
+
 # 시간표 관리 기능(`/timetable`, 로그인 필요)
 
 ## 시간표 생성
@@ -91,3 +109,53 @@ data class TimetableDetailsDTO(
 - status code:
     - 204
     - 500: some errors
+
+# 강의 탐색 및 시간표 연동 기능
+
+## 강의 검색
+
+- method & path: GET `/course/search`
+- query params:
+    - year: int
+    - semester: int
+    - q: string
+    - nextId: long
+    - size: int
+- status code:
+    - 200
+    - 400: invalid query parameters
+    - 500: server error
+- response body: `CourseSearchResponse`
+
+## 시간표에 강의 추가
+
+- method & path: POST `/timetable/:id/course`
+- auth: required
+- request body:
+```json5
+{
+  "courseId": "string"
+}
+```
+- validation rules:
+    - timetable ownership check (403)
+    - timetable or course existence check (404)
+    - prevent duplicate addition (409: DUPLICATE_COURSE)
+    - prevent overlapping class times (409: TIME_CONFLICT)
+- status code:
+    - 201: course added to timetable
+    - 403: timetable with :id is not user's
+    - 404: timetable or course not found
+    - 409: time conflict or duplicate course
+    - 500: server error
+- response body: `TimetableDetailsDTO`
+
+## 시간표에서 강의 삭제
+
+- method & path: DELETE `/timetable/:id/course/:course_id`
+- auth: required
+- status code:
+    - 204: the course is removed from timetable
+    - 403: timetable with :id is not user's
+    - 404: timetable or course not found
+- response body: none
