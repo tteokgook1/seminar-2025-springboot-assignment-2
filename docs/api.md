@@ -2,7 +2,8 @@
 
 ## TimetableDTO
 
-- same as table `timetables`
+- includes all columns as table `timetables` except `user_id`
+- includes additional property: `user: UserDTO`
 
 ## ClassTimeDTO
 
@@ -41,11 +42,11 @@ data class TimetableDetailsDTO(
 }
 ```
 
-# 시간표 관리 기능(`/timetable`, 로그인 필요)
+# 시간표 관리 기능(`/timetables`, 로그인 필요)
 
 ## 시간표 생성
 
-- method & path: POST `/timetable`
+- method & path: POST `/timetables`
 - request body:
 ```json5
 {
@@ -62,7 +63,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표 목록 조회
 
-- method & path: GET `/timetable`
+- method & path: GET `/timetables`
 - request body: none
 - status code:
     - 200
@@ -70,7 +71,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표 상세 조회
 
-- method & path: GET `/timetable/:id`
+- method & path: GET `/timetables/:id`
 - request body: none
 - status code:
     - 200
@@ -80,7 +81,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표 수정
 
-- method & path: PATCH `/timetable/:id`
+- method & path: PATCH `/timetables/:id`
 - request body:
 ```json5
 {
@@ -97,7 +98,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표 삭제
 
-- method & path: DELETE `/timetable/:id`
+- method & path: DELETE `/timetables/:id`
 - status code:
     - 204: the timetable is deleted
     - 403: timetable with :id is not user's
@@ -105,7 +106,7 @@ data class TimetableDetailsDTO(
 
 # 서울대 수강신청 사이트에서 강의 정보 가져오기
 
-- method & path: POST `/fetch/course`
+- method & path: POST `/fetch/courses`
 - status code:
     - 204
     - 500: some errors
@@ -114,7 +115,7 @@ data class TimetableDetailsDTO(
 
 ## 강의 검색
 
-- method & path: GET `/course/search`
+- method & path: GET `/courses/search`
 - query params:
     - year: int
     - semester: int
@@ -129,7 +130,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표에 강의 추가
 
-- method & path: POST `/timetable/:id/course`
+- method & path: POST `/timetables/:id/courses`
 - auth: required
 - request body:
 ```json5
@@ -152,7 +153,7 @@ data class TimetableDetailsDTO(
 
 ## 시간표에서 강의 삭제
 
-- method & path: DELETE `/timetable/:id/course/:course_id`
+- method & path: DELETE `/timetables/:id/courses/:course_id`
 - auth: required
 - status code:
     - 204: the course is removed from timetable
