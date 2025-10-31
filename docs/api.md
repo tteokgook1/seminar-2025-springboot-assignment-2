@@ -28,7 +28,7 @@ data class TimetableDetailsDTO(
 
 ```json5
 {
-  "nextId": "int",
+  "nextId": "long",
   "hasNext": "bool"
 }
 ```
@@ -106,7 +106,7 @@ data class TimetableDetailsDTO(
 
 # 서울대 수강신청 사이트에서 강의 정보 가져오기
 
-- method & path: POST `/fetch/courses`
+- method & path: POST `/courses`
 - status code:
     - 204
     - 500: some errors
@@ -115,7 +115,7 @@ data class TimetableDetailsDTO(
 
 ## 강의 검색
 
-- method & path: GET `/courses/search`
+- method & path: GET `/courses`
 - query params:
     - year: int
     - semester: int
@@ -143,11 +143,12 @@ data class TimetableDetailsDTO(
     - timetable or course existence check (404)
     - prevent duplicate addition (409: DUPLICATE_COURSE)
     - prevent overlapping class times (409: TIME_CONFLICT)
+    - assert year and semester of timetable and course are same (409: DIFFERENT_SEMESTER)
 - status code:
     - 201: course added to timetable
     - 403: timetable with :id is not user's
     - 404: timetable or course not found
-    - 409: time conflict or duplicate course
+    - 409: time conflict, duplicate course or different semester 
     - 500: server error
 - response body: `TimetableDetailsDTO`
 

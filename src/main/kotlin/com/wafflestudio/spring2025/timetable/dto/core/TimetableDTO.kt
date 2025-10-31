@@ -15,23 +15,23 @@ data class TimetableDTO(
     var createdAt: Instant,
     var updatedAt: Instant,
 ) {
-    constructor(tt: Timetable, u: User) : this(
-        tt.id!!,
-        UserDto(u),
-        tt.name,
-        tt.year,
-        tt.semester,
-        tt.createdAt!!,
-        tt.updatedAt!!,
+    constructor(timetable: Timetable, user: User) : this(
+        timetable.id!!,
+        UserDto(user),
+        timetable.name,
+        timetable.year,
+        timetable.semester,
+        timetable.createdAt!!,
+        timetable.updatedAt!!,
     )
 
-    constructor(tt: TimetableWithUser) : this(
-        tt.id,
-        UserDto(tt.user!!.id, tt.user.username),
-        tt.name,
-        tt.year,
-        tt.semester,
-        tt.createdAt,
-        tt.updatedAt,
+    constructor(timetableWithUser: TimetableWithUser) : this(
+        timetableWithUser.id,
+        UserDto(timetableWithUser.user!!.id, timetableWithUser.user.username),
+        timetableWithUser.name,
+        timetableWithUser.year,
+        timetableWithUser.semester,
+        timetableWithUser.createdAt,
+        timetableWithUser.updatedAt,
     )
 }
