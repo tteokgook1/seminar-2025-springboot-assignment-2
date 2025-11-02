@@ -48,6 +48,8 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 }
 
 kotlin {
