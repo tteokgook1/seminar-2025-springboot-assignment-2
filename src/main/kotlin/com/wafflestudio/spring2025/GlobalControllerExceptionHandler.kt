@@ -1,8 +1,8 @@
 package com.wafflestudio.spring2025
 
-import com.wafflestudio.spring2025.timetable.NotFoundException
-import com.wafflestudio.spring2025.timetable.ForbiddenException
 import com.wafflestudio.spring2025.timetable.ConflictException
+import com.wafflestudio.spring2025.timetable.ForbiddenException
+import com.wafflestudio.spring2025.timetable.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class GlobalControllerExceptionHandler {
-
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFound(exception: NotFoundException): ResponseEntity<Map<String, Any>> =
         ResponseEntity
