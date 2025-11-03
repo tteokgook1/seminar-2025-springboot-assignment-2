@@ -44,6 +44,13 @@ class JwtAuthenticationFilter(
 
     private fun isPublicPath(path: String): Boolean {
         val pathMatcher = AntPathMatcher()
-        return pathMatcher.match("/api/v1/auth/**", path)
+        val publicPaths = arrayOf(
+            "/api/v1/auth/**",
+            "/api/v1/courses/fetch"
+        )
+
+        return publicPaths.any { publicPath ->
+            pathMatcher.match(publicPath, path)
+        }
     }
 }
