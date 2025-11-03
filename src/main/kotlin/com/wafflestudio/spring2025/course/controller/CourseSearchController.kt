@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/courses")
 class CourseSearchController(
-    private val courseSearchService: CourseSearchService
+    private val courseSearchService: CourseSearchService,
 ) {
     @GetMapping("/search")
     fun searchCourses(
@@ -17,6 +17,6 @@ class CourseSearchController(
         @RequestParam semester: Int,
         @RequestParam(required = false) keyword: String?,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+        @RequestParam(defaultValue = "10") size: Int,
     ) = courseSearchService.searchCourses(year, semester, keyword, page, size)
 }

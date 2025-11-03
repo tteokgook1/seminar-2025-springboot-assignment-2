@@ -18,18 +18,19 @@ class WebClientConfig(
     @Bean
     fun sugangWebClient(): WebClient {
         val httpClient =
-            HttpClient.create()
+            HttpClient
+                .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeoutMS)
                 .responseTimeout(Duration.ofMillis(readTimeoutMS.toLong()))
                 .followRedirect(true)
 
-        return WebClient.builder()
+        return WebClient
+            .builder()
             .baseUrl(baseUrl)
             .defaultHeader("User-Agent", "Mozilla/5.0")
             .clientConnector(ReactorClientHttpConnector(httpClient))
             .codecs { cfg ->
                 cfg.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
     }
 }

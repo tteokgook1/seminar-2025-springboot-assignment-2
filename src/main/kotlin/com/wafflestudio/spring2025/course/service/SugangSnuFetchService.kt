@@ -15,33 +15,29 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import java.io.ByteArrayInputStream
-import java.io.File
 
 @Service
 class SugangSnuFetchService(
     private val webClient: WebClient,
     private val courseRepository: CourseRepository,
     private val classTimeRepository: ClassTimeRepository,
-
     @Value("\${sugang.init-url}") private val initUrl: String,
     @Value("\${sugang.ajax-url}") private val ajaxUrl: String,
     @Value("\${sugang.search-url}") private val searchUrl: String,
     @Value("\${sugang.export-url}") private val exportUrl: String,
 ) {
-
     // 1: 봄, 2: 가을, 3: 여름, 4: 겨울
-    private fun mapSemesterToSemCode(semester: Int): String {
-        return when (semester) {
+    private fun mapSemesterToSemCode(semester: Int): String =
+        when (semester) {
             1 -> "U000200001U000300001" // 1학기 (봄)
             2 -> "U000200002U000300002" // 2학기 (가을)
             3 -> "U000200001U000300002" // 여름계절
             4 -> "U000200002U000300001" // 겨울계절
             else -> throw IllegalArgumentException("Invalid semester code: $semester")
         }
-    }
 
-    private fun mapDayCharToWeekday(day: Char): Int {
-        return when (day) {
+    private fun mapDayCharToWeekday(day: Char): Int =
+        when (day) {
             '월' -> 1
             '화' -> 2
             '수' -> 3
@@ -51,14 +47,17 @@ class SugangSnuFetchService(
             '일' -> 7
             else -> 0
         }
-    }
 
-    private fun fetchXlsBytes(year: Int, semester: Int): ByteArray {
+    private fun fetchXlsBytes(
+        year: Int,
+        semester: Int,
+    ): ByteArray {
         val semCode = mapSemesterToSemCode(semester)
 
         val refererUrl = initUrl
 
-        webClient.get()
+        webClient
+            .get()
             .uri(initUrl)
             .retrieve()
             .toBodilessEntity()
@@ -75,7 +74,9 @@ class SugangSnuFetchService(
                     .with("openDeptCd", "")
                     .with("srchOpenSchyy", year.toString())
                     .with("srchOpenShtm", semCode),
-            ).retrieve().toBodilessEntity().block()
+            ).retrieve()
+            .toBodilessEntity()
+            .block()
 
         val searchBody = baseSearchForm(year, semCode).toFormDataInserter()
         webClient
@@ -89,40 +90,43 @@ class SugangSnuFetchService(
             .block()
 
         val exportBody = baseExportForm(year, semCode).toFormDataInserter()
-        val responseEntity = webClient
-            .post()
-            .uri(exportUrl)
-            .header(HttpHeaders.REFERER, "https://sugang.snu.ac.kr/sugang/co/co010.action")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(exportBody)
-            .retrieve()
-            .onStatus({ !it.is2xxSuccessful }) { resp ->
-                resp.bodyToMono(String::class.java).map { body ->
-                    IllegalStateException("Excel export failed: ${resp.statusCode()} body=$body")
-                }
-            }
-            .toEntity(ByteArray::class.java)
-            .block()!!
+        val responseEntity =
+            webClient
+                .post()
+                .uri(exportUrl)
+                .header(HttpHeaders.REFERER, "https://sugang.snu.ac.kr/sugang/co/co010.action")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(exportBody)
+                .retrieve()
+                .onStatus({ !it.is2xxSuccessful }) { resp ->
+                    resp.bodyToMono(String::class.java).map { body ->
+                        IllegalStateException("Excel export failed: ${resp.statusCode()} body=$body")
+                    }
+                }.toEntity(ByteArray::class.java)
+                .block()!!
 
         val contentType = responseEntity.headers.contentType?.toString() ?: ""
         require(contentType.contains("application/vnd.ms-excel") || contentType.contains("application/octet-stream")) {
             "Unexpected content type from sugang server: $contentType\n" +
-                    "Body preview: ${String(responseEntity.body ?: ByteArray(0)).take(200)}"
+                "Body preview: ${String(responseEntity.body ?: ByteArray(0)).take(200)}"
         }
 
         return responseEntity.body ?: throw IllegalStateException("Excel export returned empty body")
-
     }
 
     @Transactional
-    fun fetchAndSaveCourses(year: Int, semester: Int) {
+    fun fetchAndSaveCourses(
+        year: Int,
+        semester: Int,
+    ) {
         val bytes = fetchXlsBytes(year, semester)
         HSSFWorkbook(ByteArrayInputStream(bytes)).use { workbook ->
 
             val sheet: Sheet = workbook.getSheetAt(0)
 
-            val headerRow = sheet.getRow(2)
-                ?: throw IllegalStateException("XLS Header row not found. Check if row index 2 is correct.")
+            val headerRow =
+                sheet.getRow(2)
+                    ?: throw IllegalStateException("XLS Header row not found. Check if row index 2 is correct.")
 
             val headerMap = headerRow.associate { it.toString().trim() to it.columnIndex }
 
@@ -140,20 +144,21 @@ class SugangSnuFetchService(
                 // 교과목번호나 강좌번호 없으면 건너뛰기
                 if (courseNumber.isBlank() || lectureNumber.isBlank()) continue
 
-                val course = Course(
-                    year = year,
-                    semester = semester,
-                    classification = getCell(row, "교과구분").ifBlank { null },
-                    college = getCell(row, "개설대학").ifBlank { null },
-                    department = getCell(row, "개설학과").ifBlank { null },
-                    program = getCell(row, "이수과정").ifBlank { null },
-                    grade = getCell(row, "학년").toIntOrNull(),
-                    courseNumber = courseNumber,
-                    lectureNumber = lectureNumber,
-                    courseTitle = getCell(row, "교과목명"),
-                    credits = getCell(row, "학점").toIntOrNull() ?: 0,
-                    professor = getCell(row, "주담당교수").ifBlank { null },
-                )
+                val course =
+                    Course(
+                        year = year,
+                        semester = semester,
+                        classification = getCell(row, "교과구분").ifBlank { null },
+                        college = getCell(row, "개설대학").ifBlank { null },
+                        department = getCell(row, "개설학과").ifBlank { null },
+                        program = getCell(row, "이수과정").ifBlank { null },
+                        grade = getCell(row, "학년").toIntOrNull(),
+                        courseNumber = courseNumber,
+                        lectureNumber = lectureNumber,
+                        courseTitle = getCell(row, "교과목명"),
+                        credits = getCell(row, "학점").toIntOrNull() ?: 0,
+                        professor = getCell(row, "주담당교수").ifBlank { null },
+                    )
                 val savedCourse = courseRepository.save(course)
 
                 val timeString = getCell(row, "수업교시")
@@ -163,7 +168,11 @@ class SugangSnuFetchService(
         }
     }
 
-    private fun parseAndSaveClassTimes(timeStringRaw: String, roomStringRaw: String, courseId: Long) {
+    private fun parseAndSaveClassTimes(
+        timeStringRaw: String,
+        roomStringRaw: String,
+        courseId: Long,
+    ) {
         if (timeStringRaw.isBlank()) return
 
         val roomString = roomStringRaw.replace("\n", "/").replace("(무선랜제공)", "").trim()
@@ -195,14 +204,16 @@ class SugangSnuFetchService(
                     dayOfWeek = mapDayCharToWeekday(dayChar),
                     startMinute = startH * 60 + startM,
                     endMinute = endH * 60 + endM,
-                    location = location
-                )
+                    location = location,
+                ),
             )
         }
     }
 
-
-    private fun baseSearchForm(year: Int, semCode: String): Map<String, String> =
+    private fun baseSearchForm(
+        year: Int,
+        semCode: String,
+    ): Map<String, String> =
         mapOf(
             "workType" to "S",
             "pageNo" to "1",
@@ -253,7 +264,10 @@ class SugangSnuFetchService(
             "srchPageSize" to "9999",
         )
 
-    private fun baseExportForm(year: Int, semCode: String): Map<String, String> =
+    private fun baseExportForm(
+        year: Int,
+        semCode: String,
+    ): Map<String, String> =
         baseSearchForm(year, semCode).toMutableMap().apply {
             this["workType"] = "EX"
         }
