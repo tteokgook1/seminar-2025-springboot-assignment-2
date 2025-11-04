@@ -35,6 +35,10 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.apache.poi:poi:5.2.5")
+    implementation("org.apache.poi:poi-ooxml:5.2.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")

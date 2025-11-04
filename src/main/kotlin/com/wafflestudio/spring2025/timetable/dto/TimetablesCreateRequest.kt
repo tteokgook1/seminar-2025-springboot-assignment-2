@@ -1,6 +1,6 @@
 package com.wafflestudio.spring2025.timetable.dto
-import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Range
+import jakarta.validation.constraints.NotBlank
 
 data class TimetablesCreateRequest(
     @field:NotBlank(message = "이름은 공백일 수 없습니다.")
