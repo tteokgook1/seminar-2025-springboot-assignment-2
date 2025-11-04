@@ -3,4 +3,8 @@ package com.wafflestudio.spring2025.course.repository
 import com.wafflestudio.spring2025.course.model.ClassTime
 import org.springframework.data.repository.CrudRepository
 
-interface ClassTimeRepository : CrudRepository<ClassTime, Long>
+interface ClassTimeRepository : CrudRepository<ClassTime, Long>{
+
+    fun findAllByCourseId(courseId: Long): List<ClassTime>
+    fun findAllByCourseIdIn(courseIds: List<Long>): List<ClassTime>
+}

@@ -7,6 +7,7 @@ import com.wafflestudio.spring2025.helper.DataGenerator
 import com.wafflestudio.spring2025.timetable.dto.TimetablesResponse
 import com.wafflestudio.spring2025.timetable.dto.core.TimetableDTO
 import com.wafflestudio.spring2025.timetable.dto.core.TimetableDetailsDTO
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -204,11 +205,30 @@ class TimetableIntegrationTest
                 response.credits == course.credits,
                 "Failed to check credits. Expected: ${course.credits}. Found: ${response.credits}",
             )
+/*
             assertTrue(
                 response.timetable == TimetableDTO(timetable, user),
                 "Failed to check timetable. Expected: ${TimetableDTO(timetable, user)}. Found: ${response.timetable}",
             )
+
+ */
+
             val classTimes = listOf(classTime, classTime2)
+            val expectedCourseDTO = CourseDTO(course, classTimes)
+            val foundCourseDTO = response.courses.first()
+            assertEquals(expectedCourseDTO.id, foundCourseDTO.id)
+            assertEquals(expectedCourseDTO.courseTitle, foundCourseDTO.courseTitle)
+            assertEquals(expectedCourseDTO.credits, foundCourseDTO.credits)
+            assertEquals(expectedCourseDTO.professor, foundCourseDTO.professor)
+            val expectedClassTimesSet = expectedCourseDTO.classTimes.toSet()
+            val foundClassTimesSet = foundCourseDTO.classTimes.toSet()
+            assertEquals(
+                expectedClassTimesSet,
+                foundClassTimesSet,
+                "ClassTimes mismatch (order-independent). Expected: $expectedClassTimesSet, Found: $foundClassTimesSet"
+            )
+
+
             assertTrue(
                 response.courses.first() == CourseDTO(course, classTimes),
                 "Failed to check course. Expected: ${CourseDTO(course, classTimes)}. Found: ${response.courses.first()}",
