@@ -49,6 +49,12 @@ class JwtAuthenticationFilter(
                 "/api/v1/auth/**",
                 "/api/v1/courses",
                 "/api/v1/courses/**",
+                // Swagger/OpenAPI Paths
+                "/swagger-ui/**", // For the main UI assets
+                "/v3/api-docs/**", // For the OpenAPI specification JSON/YAML
+                "/v3/api-docs.yaml", // Sometimes a direct path is used
+                "/v3/api-docs.json", // Sometimes a direct path is used
+                "/webjars/**", // For older setups or specific static assets
             )
 
         return publicPaths.any { publicPath ->

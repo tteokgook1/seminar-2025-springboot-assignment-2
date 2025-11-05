@@ -45,6 +45,7 @@ class TimetableController(
         val timetables = timetableService.getTimetables(user.id!!)
         return ResponseEntity.ok(TimetablesResponse(timetables))
     }
+
     @GetMapping("/{id}")
     fun getTimetableDetails(
         @LoggedInUser user: User,

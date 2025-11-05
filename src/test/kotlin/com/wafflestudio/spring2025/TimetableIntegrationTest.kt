@@ -2,10 +2,10 @@ package com.wafflestudio.spring2025
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wafflestudio.spring2025.course.dto.CourseSearchResponse
+import com.wafflestudio.spring2025.course.dto.core.ClassTimeDTO
 import com.wafflestudio.spring2025.course.dto.core.CourseDTO
 import com.wafflestudio.spring2025.helper.DataGenerator
 import com.wafflestudio.spring2025.timetable.dto.TimetablesResponse
-import com.wafflestudio.spring2025.timetable.dto.core.TimetableDTO
 import com.wafflestudio.spring2025.timetable.dto.core.TimetableDetailsDTO
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -227,9 +227,8 @@ class TimetableIntegrationTest
             assertEquals(
                 expectedClassTimesSet,
                 foundClassTimesSet,
-                "ClassTimes mismatch (order-independent). Expected: $expectedClassTimesSet, Found: $foundClassTimesSet"
+                "ClassTimes mismatch (order-independent). Expected: $expectedClassTimesSet, Found: $foundClassTimesSet",
             )
-
 
             assertTrue(
                 response.courses.first() == CourseDTO(course, classTimes),
@@ -401,6 +400,7 @@ class TimetableIntegrationTest
                 dataGenerator.generateCourse(2025, 2)
             }
             val course = dataGenerator.generateCourse(2025, 3)
+            val classtime = dataGenerator.generateClassTime(course)
 
             mvc
                 .perform(
@@ -421,6 +421,13 @@ class TimetableIntegrationTest
 
             assertTrue(
                 response.items.size == 1,
+                "Failed to search courses. Expected: 1. Found: ${response.items.size}",
+            )
+            assertTrue(
+                response.items
+                    .getOrNull(0)
+                    ?.classTimes
+                    ?.getOrNull(0) == ClassTimeDTO(classtime),
                 "Failed to search courses. Expected: 1. Found: ${response.items.size}",
             )
         }

@@ -20,10 +20,8 @@ class CourseSearchController(
         @RequestParam(required = false, name = "q") keyword: String?,
         @RequestParam(required = false, defaultValue = "0") nextId: Long,
         @RequestParam(defaultValue = "10") size: Int,
-    ): ResponseEntity<CourseSearchResponse> {
-        return ResponseEntity.ok(
-            courseSearchService.searchCourses(year, semester, keyword, nextId, size)
+    ): ResponseEntity<CourseSearchResponse> =
+        ResponseEntity.ok(
+            courseSearchService.searchCourses(year, semester, keyword, nextId, size),
         )
-    }
-
 }
