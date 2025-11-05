@@ -14,16 +14,16 @@ class CourseSearchController(
     private val courseSearchService: CourseSearchService,
 ) {
     @GetMapping
-//    @GetMapping("/search")
     fun searchCourses(
-        @RequestParam year: Int,
-        @RequestParam semester: Int,
-        @RequestParam(required = false) keyword: String?,
-        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(required = false) year: Int?,
+        @RequestParam(required = false) semester: Int?,
+        @RequestParam(required = false, name = "q") keyword: String?,
+        @RequestParam(required = false, defaultValue = "0") nextId: Long,
         @RequestParam(defaultValue = "10") size: Int,
-    ): ResponseEntity<CourseSearchResponse> { // ⬅️ 반환 타입 명시 (권장)
-        return ResponseEntity.ok(courseSearchService.searchCourses(year, semester, keyword, page, size))
+    ): ResponseEntity<CourseSearchResponse> {
+        return ResponseEntity.ok(
+            courseSearchService.searchCourses(year, semester, keyword, nextId, size)
+        )
     }
 
-    //) = courseSearchService.searchCourses(year, semester, keyword, page, size)
 }

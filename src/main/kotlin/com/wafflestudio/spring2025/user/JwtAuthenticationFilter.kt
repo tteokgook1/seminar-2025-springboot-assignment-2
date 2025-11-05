@@ -47,7 +47,8 @@ class JwtAuthenticationFilter(
         val publicPaths =
             arrayOf(
                 "/api/v1/auth/**",
-                "/api/v1/courses/fetch",
+                "/api/v1/courses",
+                "/api/v1/courses/**",
             )
 
         return publicPaths.any { publicPath ->
