@@ -1,7 +1,7 @@
 package com.wafflestudio.spring2025.timetable.service
 
-import com.wafflestudio.spring2025.course.model.ClassTime
 import com.wafflestudio.spring2025.course.dto.core.CourseDTO
+import com.wafflestudio.spring2025.course.model.ClassTime
 import com.wafflestudio.spring2025.course.repository.ClassTimeRepository
 import com.wafflestudio.spring2025.course.repository.CourseRepository
 import com.wafflestudio.spring2025.timetable.ConflictException

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+// @RequestMapping("/api/v1/courses/fetch")
 @RestController
 @RequestMapping("/api/v1/courses")
-//@RequestMapping("/api/v1/courses/fetch")
 class CourseFetchController(
     private val sugangSnuFetchService: SugangSnuFetchService,
 ) {
@@ -22,7 +22,7 @@ class CourseFetchController(
         // 테스트에서 isNoContent (204)를 기대합니다.
         return ResponseEntity.noContent().build()
     }
-    //) {
+    // ) {
     //    sugangSnuFetchService.fetchAndSaveCourses(year, semester)
-    //}
+    // }
 }

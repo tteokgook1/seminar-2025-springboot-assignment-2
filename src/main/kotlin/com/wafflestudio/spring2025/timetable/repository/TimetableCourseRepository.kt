@@ -6,8 +6,17 @@ import org.springframework.transaction.annotation.Transactional
 
 interface TimetableCourseRepository : CrudRepository<TimetableCourse, Long> {
     fun deleteAllByTimetableId(timetableId: Long)
+
     fun findAllByTimetableId(timetableId: Long): List<TimetableCourse>
-    fun existsByTimetableIdAndCourseId(timetableId: Long, courseId: Long): Boolean
+
+    fun existsByTimetableIdAndCourseId(
+        timetableId: Long,
+        courseId: Long,
+    ): Boolean
+
     @Transactional
-    fun deleteByTimetableIdAndCourseId(timetableId: Long, courseId: Long)
+    fun deleteByTimetableIdAndCourseId(
+        timetableId: Long,
+        courseId: Long,
+    )
 }
