@@ -18,24 +18,20 @@ class CourseSearchService(
         nextId: Long,
         size: Int,
     ): CourseSearchResponse {
-        val allCourses =
-            courseRepository
-                .findAll()
-                .filter { course ->
-                    (year == null || course.year == year) &&
-                        (semester == null || course.semester == semester) &&
-                        (
-                            keyword.isNullOrBlank() ||
-                                course.courseTitle.contains(keyword, ignoreCase = true) ||
-                                (course.professor?.contains(keyword, ignoreCase = true) ?: false)
-                        )
-                }.sortedBy { it.id }
+        val limit = size + 1
+        val keywordPattern = if (keyword.isNullOrBlank()) null else "%$keyword%"
 
-        val afterCursor = allCourses.filter { (it.id ?: 0) > nextId }
-        val chunk = afterCursor.take(size + 1)
-        val hasNext = chunk.size > size
+        val courses =
+            courseRepository.searchWithCursor(
+                year = year,
+                semester = semester,
+                keywordPattern = keywordPattern,
+                nextId = nextId,
+                limit = limit,
+            )
 
-        val limited = chunk.take(size)
+        val hasNext = courses.size > size
+        val limited = courses.take(size)
         val lastId = limited.lastOrNull()?.id ?: nextId
 
         val courseIds = limited.mapNotNull { it.id }
